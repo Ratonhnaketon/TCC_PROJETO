@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "182354214238",
+    "firebase_url": "https://hellopoly-1590535973818.firebaseio.com",
+    "project_id": "hellopoly-1590535973818",
+    "storage_bucket": "hellopoly-1590535973818.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:182354214238:android:e17fb7188d99cfd278e3cf",
+        "android_client_info": {
+          "package_name": "com.DefaultCompany.HelloPoly"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "182354214238-okr5nrhve0vavs4bcu3lggkop27cm1p4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbPAjyTJL47Xn-qfdiLOKVvZMdl_DsTWg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "182354214238-okr5nrhve0vavs4bcu3lggkop27cm1p4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:182354214238:android:c825485cad045aa978e3cf",
+        "android_client_info": {
+          "package_name": "com.TCC.ARProject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "182354214238-okr5nrhve0vavs4bcu3lggkop27cm1p4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbPAjyTJL47Xn-qfdiLOKVvZMdl_DsTWg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "182354214238-okr5nrhve0vavs4bcu3lggkop27cm1p4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
