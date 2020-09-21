@@ -176,7 +176,7 @@ public class DD_Asset_Menu_UI_Screen : MonoBehaviour
     public void SetFeaturedArtistText()
     {
         if(featured_artist_text != null)
-            featured_artist_text.text = "Artist: " + poly_api.featured_artist_name;
+            featured_artist_text.text = "Objeto adicionado!";
     }
 
     void ToggleVRImage()

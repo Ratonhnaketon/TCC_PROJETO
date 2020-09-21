@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/WelcomeScene.unity
+    guid: 3b1dd1fd447da42fc9d6030cd0fe520f
+  - enabled: 1
     path: Assets/Scenes/DD_ARFoundation_GooglePoly.unity
     guid: 41a56fcdd67e443d495a6a0e83d29705
   m_configObjects:

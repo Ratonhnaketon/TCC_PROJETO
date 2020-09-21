@@ -5,6 +5,8 @@ using UnityEngine.XR.ARFoundation;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using System;
+using UnityEngine.UI;
+using DigitalDreams.UI;
 
 struct Movement
 {
@@ -31,6 +33,7 @@ public class SceneObjectManager : MonoBehaviour
     public List<GameObject> objectsInScene;
     public ARPlacementIndicator arTap;
     public DD_PolyAR google_poly_api;
+    public Text featured_artist_text;
     Transform pivot;
 
     public ARRaycastManager arRaycastManager;
@@ -265,6 +268,8 @@ public class SceneObjectManager : MonoBehaviour
             if (onObjectRemoved != null)
             {
                 onObjectRemoved.Invoke();
+                if(featured_artist_text != null)
+                    featured_artist_text.text = "Escolha um objeto e\ntoque para posicioná-lo";
             }
         }
     }
