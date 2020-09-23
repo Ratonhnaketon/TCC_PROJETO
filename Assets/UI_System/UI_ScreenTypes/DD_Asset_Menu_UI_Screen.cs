@@ -9,6 +9,8 @@ using UnityEngine.EventSystems;
 public class DD_Asset_Menu_UI_Screen : MonoBehaviour
 {
     #region variables
+	static bool searchOnPoly = true;
+
     [Header("Asset Screen Properties")]
     public UnityEvent onAssetsReceived = new UnityEvent();
 
@@ -26,6 +28,7 @@ public class DD_Asset_Menu_UI_Screen : MonoBehaviour
     public Sprite ar_toggle_image, vr_toggle_image;
 
     public DD_PolyAR poly_api;
+    public FirebaseHandler firebaseHandler;
 
     public GameObject camera_screen;
 
@@ -43,8 +46,15 @@ public class DD_Asset_Menu_UI_Screen : MonoBehaviour
     This method communicates with the DD_PolyAR.cs script to query 3d models from Google's poly api
          */
 
+	public static void ChangeSearch(string plataform = "poly")
+	{
+		searchOnPoly = string.Compare(plataform, "poly") == 0;
+	} 
+
+
     public void Awake()
     {
+		poly_api.getInitialAssets(searchOnPoly);
         Debug.Log(this.name);
         parent = GameObject.FindWithTag("asset_panels");
         container = parent.GetComponent<RectTransform>();
@@ -135,9 +145,37 @@ public class DD_Asset_Menu_UI_Screen : MonoBehaviour
     public void SearchButtonQuery()
     {
         Debug.Log("Search Input " + search_input_field.textComponent.text);
-        poly_api.PolyAssetSearchQuery(search_input_field.text);
+        if (searchOnPoly)
+        {
+            poly_api.PolyAssetSearchQuery(search_input_field.text);
+        }
+        else
+        {
+		    firebaseHandler.getElements(HandleFirebaseObjects);
+        }
     }
 
+    public void HandleFirebaseObjects(ARObject[] arObjects)
+    {
+        int size = 0;
+        foreach (ARObject arObject in arObjects)
+        {
+            if (string.Join(",", arObject.hashtags).Contains(search_input_field.text))
+            {
+                size += 1;
+            }
+        }
+        poly_api.StartSearchOnFireBase(size);
+
+        foreach (ARObject arObject in arObjects)
+        {
+            if (string.Join(",", arObject.hashtags).Contains(search_input_field.text))
+            {
+                Debug.Log(arObject.id);
+                poly_api.GetSingleThumbnailWithID(arObject.id);
+            }
+        }
+    }
     public void ImportAssetOnClick()
     {
         Debug.Log("You have clicked the " + EventSystem.current.currentSelectedGameObject.name + " button!");
@@ -176,7 +214,7 @@ public class DD_Asset_Menu_UI_Screen : MonoBehaviour
     public void SetFeaturedArtistText()
     {
         if(featured_artist_text != null)
-            featured_artist_text.text = "Objeto adicionado!";
+            featured_artist_text.text = "";
     }
 
     void ToggleVRImage()

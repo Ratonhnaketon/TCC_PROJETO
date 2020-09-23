@@ -9,7 +9,7 @@ public class DD_PolyAR : MonoBehaviour {
 
 	#region protected variables
 	// a list of - key, value pairs ordered asset.name (ID), asset.displayName (name)
-	public FirebaseHandler firebaseHandler;
+
 	[SerializeField] public List<KeyValuePair<string, string>> asset_id_name_list;
 	[SerializeField] public List<KeyValuePair<string, Texture2D>> asset_thumbnail_list;
 	[SerializeField] Transform m_cameraTransform; 
@@ -29,13 +29,11 @@ public class DD_PolyAR : MonoBehaviour {
 
 	#region public variables
 
-	public string searchKeyword = "tree";
-
 	#endregion
 
 	#region main methods
 
-	void Start () 
+	public void Start ()
 	{
 		m_cameraTransform = GameObject.FindWithTag("MainCamera").transform;
 
@@ -43,17 +41,58 @@ public class DD_PolyAR : MonoBehaviour {
 		asset_thumbnail_list = new List<KeyValuePair<string, Texture2D>>();
 		Debug.Log("Requesting List of Assets...");
 		// list featured assets
-		PolyApi.ListAssets(PolyListAssetsRequest.Featured(), FeaturedAssetListCallback);
-		firebaseHandler.getElements(arObjects => Debug.Log(arObjects));
-		
-		//PolyAssetSearchQuery(searchKeyword);
+
 	}
 
 	#endregion
 
+	public void getInitialAssets (bool isPoly)
+	{
+        FirebaseHandler firebaseHandler = FindObjectOfType<FirebaseHandler>();
+		m_cameraTransform = GameObject.FindWithTag("MainCamera").transform;
+
+		asset_id_name_list = new List<KeyValuePair<string, string>>();
+		asset_thumbnail_list = new List<KeyValuePair<string, Texture2D>>();
+		// list featured assets
+		if (isPoly)
+		{
+			PolyApi.ListAssets(PolyListAssetsRequest.Featured(), FeaturedAssetListCallback);
+		}
+		else
+		{
+			firebaseHandler.getElements(HandleFirebaseObjects);
+		}
+	}
+	public void HandleFirebaseObjects(ARObject[] arObjects)
+	{
+		resultCount = arObjects.Length;
+
+		foreach (ARObject arObject in arObjects)
+		{
+			GetSingleThumbnailWithID(arObject.id);
+		}
+	}
 
 	#region helper methods
 
+	void FeaturedAssetCallback(PolyStatusOr<PolyAsset> result)
+	{
+		if (!result.Ok)
+		{
+			// Handle error.
+			Debug.LogError("Failed to import featured list. :( Reason: " + result.Status);
+			return;
+		}
+		// Success. result.Value is a PolyAssets
+		PolyApi.FetchThumbnail(result.Value, GetThumbnailCallback);
+		Debug.Log(result.Value.displayName);
+		asset_id_name_list.Add(new KeyValuePair<string, string>(result.Value.name, result.Value.displayName));
+
+		asset_id_name_list.Sort((x, y) => string.Compare(x.Key, y.Key, StringComparison.Ordinal));
+
+		if(onPolyAssetsLoaded != null)
+			onPolyAssetsLoaded.Invoke();
+	}
 	void FeaturedAssetListCallback(PolyStatusOr<PolyListAssetsResult> result)
 	{
 		if (!result.Ok)
@@ -64,7 +103,6 @@ public class DD_PolyAR : MonoBehaviour {
 		}
 		// Success. result.Value is a PolyListAssetsResult and
 		// result.Value.assets is a list of PolyAssets.
-		// asset_id_name_list
 		asset_id_name_list.AddRange(
 			result.Value.assets.Take(resultCount).Select((asset) =>
 			{
@@ -80,6 +118,13 @@ public class DD_PolyAR : MonoBehaviour {
 			onPolyAssetsLoaded.Invoke();
 	}
 
+	public void StartSearchOnFireBase(int assetsSize) 
+	{
+		resultCount = assetsSize;
+		asset_id_name_list.Clear();
+		asset_thumbnail_list.Clear();
+	}
+
 	private void GetThumbnailCallback(PolyAsset asset, PolyStatus status)
 	{
 		if (!status.ok)
@@ -88,7 +133,6 @@ public class DD_PolyAR : MonoBehaviour {
 			return;
 		}
 		asset_thumbnail_list.Add(new KeyValuePair<string, Texture2D>(asset.name, asset.thumbnailTexture));
-
 		if (asset_thumbnail_list.Count == resultCount)
 		{
 			asset_thumbnail_list.Sort((x, y) => string.Compare(x.Key, y.Key, StringComparison.Ordinal));
@@ -173,9 +217,14 @@ public class DD_PolyAR : MonoBehaviour {
 		}
 	}
 
+	public void GetSingleThumbnailWithID(string modelId)
+	{
+		PolyApi.GetAsset(modelId, FeaturedAssetCallback);
+	}
 	// get single asset w/ ID
 	public void GetSingleAssetWithID(string modelId)
 	{
+
 		PolyApi.GetAsset(modelId, GetAssetCallback);
 	}
 

@@ -453,7 +453,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1035129953}
-        m_MethodName: Scene2
+        m_MethodName: SceneWithFirebase
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -860,7 +860,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1035129953}
-        m_MethodName: Scene2
+        m_MethodName: SceneWithGooglePoly
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
