@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using PolyToolkit;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class DD_PolyAR : MonoBehaviour {
 
@@ -15,6 +16,11 @@ public class DD_PolyAR : MonoBehaviour {
 	[SerializeField] Transform m_cameraTransform; 
 	int resultCount = 20;
 	public GameObject importedObject;
+	public bool polyDescription;
+	public ARObject[] firebaseObjects;
+	public Text Title;
+	public Text description;
+	public Image thumb;
 	[SerializeField] ARPlacementIndicator ar_tap_to_place_object;
 	[Header("Unity Events")]
 	public UnityEvent onPolyAssetsLoaded = new UnityEvent();
@@ -48,6 +54,7 @@ public class DD_PolyAR : MonoBehaviour {
 
 	public void getInitialAssets (bool isPoly)
 	{
+		polyDescription = isPoly;
         FirebaseHandler firebaseHandler = FindObjectOfType<FirebaseHandler>();
 		m_cameraTransform = GameObject.FindWithTag("MainCamera").transform;
 
@@ -65,6 +72,7 @@ public class DD_PolyAR : MonoBehaviour {
 	}
 	public void HandleFirebaseObjects(ARObject[] arObjects)
 	{
+		firebaseObjects = arObjects;
 		resultCount = arObjects.Length;
 
 		foreach (ARObject arObject in arObjects)
@@ -163,8 +171,45 @@ public class DD_PolyAR : MonoBehaviour {
 		// We want the imported assets to be recentered such that their centroid coincides with the origin:
 		options.recenter = true;
 
+		Debug.Log("passa aqui?");
+
+		PolyApi.FetchThumbnail(result.Value, GetThumbCallback);
+
+		if(polyDescription) {
+			Title.text = result.Value.displayName;
+			Debug.Log("ate aqui dibas");
+			Debug.Log(result.Value);
+			if (result.Value.description != null && result.Value.description.Length > 0) {
+				Debug.Log("deu ruim?");
+				description.text = result.Value.description;
+			} else {
+				description.text = "Este objeto ainda não possui descrição disponível";
+			}
+		} else {
+			Debug.Log("e aqui?");
+			var obj = firebaseObjects.SingleOrDefault(firebaseObject => { 
+				Debug.Log(firebaseObject.id);
+				Debug.Log(result.Value.name);
+				var objId = firebaseObject.id;
+				return $"assets/{objId}" == result.Value.name; });
+			Debug.Log("obj:");
+			Debug.Log(obj);
+			if (obj != null) {
+				Debug.Log("aqui tbm??");
+				Title.text = obj.name;
+				description.text = obj.description;
+			}
+		}
+
 		//statusText.text = "Importing...";
 		PolyApi.Import(result.Value, options, ImportAssetCallback);
+	}
+
+	private void GetThumbCallback(PolyAsset asset, PolyStatus status) {
+		Texture2D t = asset.thumbnailTexture;
+		Sprite mySprite = Sprite.Create(t, new Rect(0.0f, 0.0f, t.width, t.height), new Vector2(0.5f, 0.5f), 100.0f);
+            thumb.sprite = mySprite;
+            thumb.preserveAspect = true;
 	}
 
 	// Callback invoked when an asset has just been imported.
