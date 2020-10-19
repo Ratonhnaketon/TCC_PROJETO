@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028355, g: 0.22571374, b: 0.30692255, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1397,8 +1397,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -1, y: 0}
+  m_SizeDelta: {x: -7.800003, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &843402446
 MonoBehaviour:
@@ -1413,7 +1413,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1421,18 +1421,18 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 29
+    m_FontSize: 62
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 128
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Ver informa\xE7\xF5es"
+  m_Text: i
 --- !u!222 &843402447
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1522,7 +1522,7 @@ GameObject:
   m_Layer: 5
   m_Name: SeeDetailsButton
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 7250588514170254948, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -1543,8 +1543,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 246, y: -242}
-  m_SizeDelta: {x: 313.9, y: 92.3}
+  m_AnchoredPosition: {x: 356, y: -242}
+  m_SizeDelta: {x: 92.3, y: 92.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &962361518
 MonoBehaviour:
@@ -1613,14 +1613,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0.43023157, b: 1, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 2
@@ -2525,6 +2525,8 @@ MonoBehaviour:
   assets_menu_button: {fileID: 1475030390}
   delete_button: {fileID: 2165214927766557282}
   vr_toggle_button: {fileID: 752161718}
+  info_button: {fileID: 962361518}
+  search_google_button: {fileID: 703778567}
   search_input_field: {fileID: 1579063746}
   ar_toggle_image: {fileID: 21300000, guid: b7548a86928aa4cae997640b6b74ef7c, type: 3}
   vr_toggle_image: {fileID: 21300000, guid: 19778d6533d464681b2d600b2102b5d8, type: 3}
@@ -2533,6 +2535,7 @@ MonoBehaviour:
   camera_screen: {fileID: 1711269084}
   panelSize: {x: 0, y: 0}
   container: {fileID: 0}
+  arPlaneManager: {fileID: 0}
 --- !u!225 &1413946830
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3815,7 +3818,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -3834,7 +3837,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Escolha um objeto e\ntoque para posicion\xE1-lo"
+  m_Text: Mova seu celular para detectar algum plano
 --- !u!224 &3933111326003044781
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3851,7 +3854,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -40.513977}
+  m_AnchoredPosition: {x: 0, y: -594}
   m_SizeDelta: {x: 480, y: 110.97211}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!224 &7448235323120104761

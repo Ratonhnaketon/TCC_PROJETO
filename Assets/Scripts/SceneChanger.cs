@@ -8,16 +8,12 @@ public class SceneChanger: MonoBehaviour {
 		SceneManager.LoadScene("WelcomeScene");  
 	}  
 
-	public void SceneWithFirebase() {
-		DD_Asset_Menu_UI_Screen.ChangeSearch("firebase");
-		SceneManager.LoadScene("DD_ARFoundation_GooglePoly");
-	}  
-	public void SceneWithGooglePoly() {
-		DD_Asset_Menu_UI_Screen.ChangeSearch("poly");
-		SceneManager.LoadScene("DD_ARFoundation_GooglePoly");  
-	}      	
-
-	public void Scene3() {  
-		SceneManager.LoadScene("Scene3");  
-	}  
+	// public void SceneWithFirebase() {
+	// 	DD_Asset_Menu_UI_Screen.ChangeSearch("firebase");
+	// 	SceneManager.LoadScene("DD_ARFoundation_GooglePoly");
+	// }  
+	// public void SceneWithGooglePoly() {
+	// 	DD_Asset_Menu_UI_Screen.ChangeSearch("poly");
+	// 	SceneManager.LoadScene("DD_ARFoundation_GooglePoly");  
+	// }      	
 }  
