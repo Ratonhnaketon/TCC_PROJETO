@@ -15,6 +15,7 @@ public class DD_PolyAR : MonoBehaviour {
 	[SerializeField] public List<KeyValuePair<string, Texture2D>> asset_thumbnail_list;
 	[SerializeField] Transform m_cameraTransform; 
 	int resultCount = 20;
+	public Text SearchTerm;
 	public GameObject importedObject;
 	public bool polyDescription;
 	public ARObject[] firebaseObjects;
@@ -75,10 +76,10 @@ public class DD_PolyAR : MonoBehaviour {
 		firebaseObjects = arObjects;
 		resultCount = arObjects.Length;
 
-		foreach (ARObject arObject in arObjects)
-		{
-			GetSingleThumbnailWithID(arObject.id);
-		}
+		// foreach (ARObject arObject in arObjects)
+		// {
+		// 	GetSingleThumbnailWithID(arObject.id);
+		// }
 	}
 
 	#region helper methods
@@ -191,7 +192,7 @@ public class DD_PolyAR : MonoBehaviour {
 				Debug.Log(firebaseObject.id);
 				Debug.Log(result.Value.name);
 				var objId = firebaseObject.id;
-				return $"assets/{objId}" == result.Value.name; });
+				return $"assets/{objId}" == result.Value.name && SearchTerm.text == firebaseObject.hashtags[0]; });
 			Debug.Log("obj:");
 			Debug.Log(obj);
 			if (obj != null) {
