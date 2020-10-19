@@ -4,12 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using DigitalDreams.UI;
 using UnityEngine.Events;
+using UnityEngine.XR.ARFoundation;
 using UnityEngine.EventSystems;
 
 public class DD_Asset_Menu_UI_Screen : MonoBehaviour
 {
     #region variables
-	static bool searchOnPoly = true;
+	static bool searchOnPoly = false;
 
     [Header("Asset Screen Properties")]
     public UnityEvent onAssetsReceived = new UnityEvent();
@@ -23,7 +24,7 @@ public class DD_Asset_Menu_UI_Screen : MonoBehaviour
     public Text featured_artist_text;
 
 
-    public Button search_button, assets_menu_button, delete_button, vr_toggle_button;
+    public Button search_button, assets_menu_button, delete_button, vr_toggle_button, info_button, search_google_button;
     public InputField search_input_field;
     public Sprite ar_toggle_image, vr_toggle_image;
 
@@ -36,6 +37,9 @@ public class DD_Asset_Menu_UI_Screen : MonoBehaviour
     public RectTransform container;
 
     GameObject parent;
+    public ARPlaneManager arPlaneManager;
+    private bool planeDetected = false;
+
 
     SceneObjectManager objectManager;
     #endregion
@@ -46,10 +50,10 @@ public class DD_Asset_Menu_UI_Screen : MonoBehaviour
     This method communicates with the DD_PolyAR.cs script to query 3d models from Google's poly api
          */
 
-	public static void ChangeSearch(string plataform = "poly")
-	{
-		searchOnPoly = string.Compare(plataform, "poly") == 0;
-	} 
+	// public static void ChangeSearch(string plataform = "poly")
+	// {
+	// 	searchOnPoly = string.Compare(plataform, "poly") == 0;
+	// } 
 
 
     public void Awake()
@@ -58,16 +62,20 @@ public class DD_Asset_Menu_UI_Screen : MonoBehaviour
         Debug.Log(this.name);
         parent = GameObject.FindWithTag("asset_panels");
         container = parent.GetComponent<RectTransform>();
+        arPlaneManager = FindObjectOfType<ARPlaneManager>();
 
         // get panel asset size from prefab
         panelSize = new Vector2(assets_panel_prefab.GetComponent<RectTransform>().sizeDelta.x, assets_panel_prefab.GetComponent<RectTransform>().sizeDelta.y);
         Debug.Log("Panel Size " + panelSize.ToString());
 
         // Add listener to search button
+
         search_button.onClick.AddListener(SearchButtonQuery);
+        search_google_button.gameObject.SetActive(false);
+        info_button.gameObject.SetActive(false);
 
         poly_api.onAssetImported.AddListener(SetFeaturedArtistText);
-
+        poly_api.onAssetImported.AddListener(ShowInfoButton);
         objectManager = FindObjectOfType<SceneObjectManager>();
         objectManager.onObjectSelected.AddListener(SetFeaturedArtistText);
         //delete_button.onClick.AddListener(delegate { objectManager.RemoveObjectFromScene(SceneObjectManager.currObj); } );
@@ -77,6 +85,16 @@ public class DD_Asset_Menu_UI_Screen : MonoBehaviour
             vr_toggle_button.onClick.AddListener(ToggleVRImage);
         }
     }
+
+    public void Update()
+    {
+        if (arPlaneManager.trackables.count > 0 && !planeDetected)
+        {
+            planeDetected = true;
+            featured_artist_text.text = "Selecione um objeto e clique na tela para posicioná-lo";
+            search_google_button.gameObject.SetActive(true);
+        }
+    } 
 
     public void InstantiatePanels()
     {
@@ -175,7 +193,7 @@ public class DD_Asset_Menu_UI_Screen : MonoBehaviour
                 poly_api.GetSingleThumbnailWithID(arObject.id);
             }
         }
-    }
+    }   
     public void ImportAssetOnClick()
     {
         Debug.Log("You have clicked the " + EventSystem.current.currentSelectedGameObject.name + " button!");
@@ -215,6 +233,11 @@ public class DD_Asset_Menu_UI_Screen : MonoBehaviour
     {
         if(featured_artist_text != null)
             featured_artist_text.text = "";
+    }
+
+    void ShowInfoButton()
+    {
+        info_button.gameObject.SetActive(true);
     }
 
     void ToggleVRImage()
