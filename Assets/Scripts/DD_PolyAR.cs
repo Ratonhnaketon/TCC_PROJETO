@@ -197,6 +197,7 @@ public class DD_PolyAR : MonoBehaviour {
 			if (obj != null) {
 				Debug.Log("aqui tbm??");
 				Title.text = obj.name;
+				options.desiredSize *= obj.scale;
 				description.text = obj.description;
 			}
 		}
