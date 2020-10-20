@@ -24,13 +24,14 @@ public class DD_Asset_Menu_UI_Screen : MonoBehaviour
     public Text featured_artist_text;
 
 
-    public Button search_button, assets_menu_button, delete_button, vr_toggle_button, info_button, search_google_button;
+    public Button search_button, assets_menu_button, delete_button, vr_toggle_button, info_button, search_google_button, disable_button;
     public InputField search_input_field;
     public Sprite ar_toggle_image, vr_toggle_image;
 
     public DD_PolyAR poly_api;
     public FirebaseHandler firebaseHandler;
-
+    public bool blockImage = false;
+    private bool panelOpen = false;
     public GameObject camera_screen;
 
     public Vector2 panelSize;
@@ -73,10 +74,12 @@ public class DD_Asset_Menu_UI_Screen : MonoBehaviour
         search_button.onClick.AddListener(SearchButtonQuery);
         search_google_button.gameObject.SetActive(false);
         info_button.gameObject.SetActive(false);
+        disable_button.gameObject.SetActive(false);
 
         poly_api.onAssetImported.AddListener(SetFeaturedArtistText);
-        poly_api.onAssetImported.AddListener(ShowInfoButton);
+        poly_api.onAssetImported.AddListener(ShowButtons);
         objectManager = FindObjectOfType<SceneObjectManager>();
+        objectManager.onObjectRemoved.AddListener(HideButtons);
         objectManager.onObjectSelected.AddListener(SetFeaturedArtistText);
         //delete_button.onClick.AddListener(delegate { objectManager.RemoveObjectFromScene(SceneObjectManager.currObj); } );
         if (ar_toggle_image != null)
@@ -209,6 +212,13 @@ public class DD_Asset_Menu_UI_Screen : MonoBehaviour
 
     public void ToggleAssetMenu()
     {
+        if (objectManager.objectsInScene.Count > 0)
+        {
+            delete_button.gameObject.SetActive(panelOpen);
+            info_button.gameObject.SetActive(panelOpen);
+            disable_button.gameObject.SetActive(panelOpen);
+        }
+
         if(!this.GetComponent<CanvasGroup>().interactable)
         {
             this.GetComponent<CanvasGroup>().alpha = 1;
@@ -227,6 +237,7 @@ public class DD_Asset_Menu_UI_Screen : MonoBehaviour
             this.gameObject.GetComponent<CanvasGroup>().blocksRaycasts = false;
             this.gameObject.GetComponent<CanvasGroup>().interactable = false;
         }
+        panelOpen = !panelOpen;
     }
 
     public void SetFeaturedArtistText()
@@ -235,11 +246,24 @@ public class DD_Asset_Menu_UI_Screen : MonoBehaviour
             featured_artist_text.text = "";
     }
 
-    void ShowInfoButton()
+    void ShowButtons()
     {
+        disable_button.gameObject.SetActive(true);
         info_button.gameObject.SetActive(true);
     }
 
+    void HideButtons()
+    {
+        disable_button.gameObject.SetActive(false);
+        info_button.gameObject.SetActive(false);
+    }
+
+    public void ToggleBlockImage()
+    {
+        Vector2 newSizeOfButton = !blockImage ? new Vector2(80, 80) : new Vector2(100, 100);
+        disable_button.GetComponent<RectTransform>().sizeDelta = newSizeOfButton;
+        blockImage = !blockImage;
+    }
     void ToggleVRImage()
     {
         vr_toggle_button.image.sprite = (ar_toggle_image == vr_toggle_button.image.sprite) ? vr_toggle_button.image.sprite = vr_toggle_image : vr_toggle_button.image.sprite = ar_toggle_image;

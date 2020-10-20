@@ -44,6 +44,7 @@ public class SceneObjectManager : MonoBehaviour
     Vector3 currentScale;
     Vector3 currentPosition;
     public static Vector3 touchPos = Vector3.zero;
+    public DD_Asset_Menu_UI_Screen uiScreen;
     public static bool touchPoseIsValid = false;
 
     public UnityEvent onObjectSelected = new UnityEvent();
@@ -57,6 +58,7 @@ public class SceneObjectManager : MonoBehaviour
     {
         Debug.Log(this.name);
         arTap = FindObjectOfType<ARPlacementIndicator>();
+        uiScreen = FindObjectOfType<DD_Asset_Menu_UI_Screen>();
         google_poly_api = FindObjectOfType<DD_PolyAR>();
 
         pivot = new GameObject().transform;
@@ -70,7 +72,7 @@ public class SceneObjectManager : MonoBehaviour
 
     private void Update()
     {
-        if (currObj != null)
+        if (currObj != null && !uiScreen.blockImage)
         {
             Movement newMovement = DetectMovement();
             ExecuteMovement(newMovement);
@@ -242,7 +244,7 @@ public class SceneObjectManager : MonoBehaviour
 
     public void AddObjectToScene()
     {
-        //RemoveObjectFromScene(currObj);
+        RemoveObjectFromScene();
 
         // Set selected object to
         Debug.Log(google_poly_api.importedObject);
