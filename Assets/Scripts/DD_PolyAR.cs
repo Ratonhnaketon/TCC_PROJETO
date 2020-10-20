@@ -20,12 +20,14 @@ public class DD_PolyAR : MonoBehaviour {
 	public ARObject[] firebaseObjects;
 	public Text Title;
 	public Text description;
+	public Text searchTerm;
 	public Image thumb;
 	[SerializeField] ARPlacementIndicator ar_tap_to_place_object;
 	[Header("Unity Events")]
 	public UnityEvent onPolyAssetsLoaded = new UnityEvent();
 	public UnityEvent onPolyThumbLoaded = new UnityEvent();
 	public UnityEvent onAssetImported = new UnityEvent();
+
 	public List<string> artist_names;
 	public string featured_artist_name;
 	public float distMultiplier = 1.5f;
@@ -75,10 +77,10 @@ public class DD_PolyAR : MonoBehaviour {
 		firebaseObjects = arObjects;
 		resultCount = arObjects.Length;
 
-		foreach (ARObject arObject in arObjects)
-		{
-			GetSingleThumbnailWithID(arObject.id);
-		}
+		// foreach (ARObject arObject in arObjects)
+		// {
+		// 	GetSingleThumbnailWithID(arObject.id);
+		// }
 	}
 
 	#region helper methods
@@ -191,7 +193,7 @@ public class DD_PolyAR : MonoBehaviour {
 				Debug.Log(firebaseObject.id);
 				Debug.Log(result.Value.name);
 				var objId = firebaseObject.id;
-				return $"assets/{objId}" == result.Value.name; });
+				return $"assets/{objId}" == result.Value.name && searchTerm.text == firebaseObject.hashtags[0]; });
 			Debug.Log("obj:");
 			Debug.Log(obj);
 			if (obj != null) {
