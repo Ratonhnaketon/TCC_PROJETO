@@ -7,7 +7,10 @@ using Firebase;
 using Firebase.Unity.Editor;
 using System.Linq;
 using RSG;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 public class FirebaseHandler : MonoBehaviour
 {
@@ -18,6 +21,19 @@ public class FirebaseHandler : MonoBehaviour
 
 	public void getElements(ARObjectsCallback callback, string hashtag = "")
 	{
-		RestClient.GetArray<ARObject>($"{databaseURL}ARObjects.json").Then(arObjects => callback(arObjects));
+		RestClient.Get($"{databaseURL}leandro.json").Then(response => {
+    		JObject json = JsonConvert.DeserializeObject<JObject>(response.Text);
+			List<ARObject> arObjects = new List<ARObject>();
+			foreach (var e in json)
+			{
+				string name = (string) e.Value["name"];
+				string description = (string) e.Value["description"];
+				string id = (string) e.Value["id"];
+				string[] hashtags = { e.Value["hashtags"][0].ToString() };
+				float scale = (float) e.Value["scale"];
+				arObjects.Add(new ARObject(name, description, id, hashtags, scale));
+			}	
+			callback(arObjects.ToArray());
+		});
 	}
 }
