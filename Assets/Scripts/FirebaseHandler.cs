@@ -10,6 +10,14 @@ using System.Linq;
 using RSG;
 using System.Threading.Tasks;
 using System.Reflection;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+[Serializable]
+public class Teste
+{
+  public Dictionary<string, ARObject> showTop;
+}
 
 public class FirebaseHandler : MonoBehaviour
 {
@@ -30,75 +38,139 @@ public class FirebaseHandler : MonoBehaviour
   public void getElements(ARObjectsCallback callback, string hashtag = "")
   {
 
-    FirebaseDatabase.DefaultInstance
-       .GetReference("leandro")
-       .GetValueAsync().ContinueWith(task =>
-       {
-         if (task.IsFaulted)
-         {
-           // Handle the error...
-           Debug.Log("errou");
-           Debug.Log(task);
-         }
-         else if (task.IsCompleted)
-         {
-           DataSnapshot snapshot = task.Result;
-           var chaveEval = snapshot.ToString();
-           // ARObject obj = new ARObject("a","a","a", v);
-           var i = 0;
+    RestClient.Get($"{databaseURL}leandro.json").Then(arObjects =>
+    {
+      //  Type myType = arObjects.GetType();
+      //  Debug.Log("myType");
+      //  Debug.Log(myType);
+      //  IList<PropertyInfo> props = new List<PropertyInfo>(myType.GetProperties());
 
-           Debug.Log("fiotes");
-           Debug.Log(snapshot.ChildrenCount);
-           ARObject[] convertedObjects = new ARObject[snapshot.ChildrenCount];
+      //  Debug.Log("those are properties:");
+      //  Debug.Log(props);
+      //  var i = 0;
+      //  var jObject = JsonConvert.DeserializeObject<JObject>(arObjects.Text);
+			Debug.Log("values");
+      var values = JsonConvert.DeserializeObject<JObject>(arObjects.Text);
 
-           foreach (DataSnapshot value in snapshot.Children)
-           {
-             string[] v = { "" };
-             ARObject obj = new ARObject("a", "a", "a", v, 1);
-             // Debug.Log(value);
-             // obj = (ARObject)value.Value;
-             Debug.LogFormat("valor de i {0}", i);
-             foreach (DataSnapshot good in value.Children)
-             {
-               // Debug.LogFormat("Key = {0}, Value = {0}", good.Key, good.Value.ToString());
-               // Debug.Log(good.Key);
-               // Debug.Log(good.Value);
+			List<ARObject> convertedObjects = new List<ARObject>();
 
-               if (good.Key == "id")
-               {
-                 obj.id = good.Value.ToString();
-               }
-               else if (good.Key == "name")
-               {
-                 obj.name = good.Value.ToString();
-               }
-               else if (good.Key == "description")
-               {
-                 obj.description = good.Value.ToString();
-               }
-               else if (good.Key == "hashtags")
-               {
-                 foreach (DataSnapshot hashTag in good.Children)
-                 {
-                   Debug.LogFormat("e ai? {0}", hashTag);
-                   obj.hashtags[0] = hashTag.Value.ToString();
-                 }
-               }
-               else if (good.Key == "scale")
-               {
-                 obj.scale = float.Parse(good.Value.ToString());
-               }
+			Debug.Log(values);
+			// ARObject[] convertedObjects = new ARObject[snapshot.ChildrenCount];
+			var i = 0;
+      foreach (var uni in values)
+      {
+        //you can print values here or add to a list or ...
+        var id = uni.Value["id"].ToString();
+        var name = uni.Value["name"].ToString();
+				var description = uni.Value["description"].ToString();
+				string[] hashs = {uni.Value["hashtags"][0].ToString()};
+				var scale = float.Parse(uni.Value["scale"].ToString());
 
-             }
+				ARObject oi = new ARObject(name, description, id, hashs, scale);
+				convertedObjects.Add(oi);
 
-             convertedObjects[i] = obj;
-             i++;
-           }
+				Debug.Log(id);
+				Debug.Log(name);
+				Debug.Log(hashs);
 
-           Debug.LogFormat("esse estah assim: {0} {1} {2} {3} {4}", convertedObjects[0].id, convertedObjects[0].name, convertedObjects[0].description, convertedObjects[0].hashtags[0], convertedObjects[0].scale);
-           Debug.LogFormat("e esse assim: {0} {1} {2} {3} {4}", convertedObjects[1].id, convertedObjects[1].name, convertedObjects[1].description, convertedObjects[1].hashtags[0], convertedObjects[1].scale);
-           callback(convertedObjects);
-         }
-       });
+      }
+
+			ARObject[] arrayConverted = convertedObjects.ToArray();
+
+			callback(arrayConverted);
+
+      //  foreach (PropertyInfo prop in props)
+      //  {
+      //      Debug.Log("prop name: ");
+      //      Debug.LogFormat("prop.Name {0} {1}", prop.Name, i);
+      //      Debug.Log(prop);
+      // 		 var j = 50;
+      // 		 if (prop.Name == "Text") {
+      // 			 Debug.LogFormat("esse aqui eh o json {0}", i);
+      // 			//  var jObject = JsonConvert.DeserializeObject<JObject>(prop.GetValue(arObjects, null));
+      // 		 }
+      //      object propValue = prop.GetValue(arObjects, null);
+      //      Debug.Log("oi");
+      //      Debug.Log(propValue);
+      //      Debug.Log("tchau");
+      // 		 i++;
+
+      //      // convertedObjects.Add(propValue);
+
+      //      // Do something with propValue
+      //  }
+      // Debug.Log(JsonUtility.FromJson(arObjects));
+    });
+
+    // FirebaseDatabase.DefaultInstance
+    //    .GetReference("leandro")
+    //    .GetValueAsync().ContinueWith(task =>
+    //    {
+    //      if (task.IsFaulted)
+    //      {
+    //        // Handle the error...
+    //        Debug.Log("errou");
+    //        Debug.Log(task);
+    //      }
+    //      else if (task.IsCompleted)
+    //      {
+    //        DataSnapshot snapshot = task.Result;
+    //        var chaveEval = snapshot.ToString();
+    //        // ARObject obj = new ARObject("a","a","a", v);
+    //        var i = 0;
+
+    //        Debug.Log("fiotes");
+    //        Debug.Log(snapshot.ChildrenCount);
+    //        ARObject[] convertedObjects = new ARObject[snapshot.ChildrenCount];
+
+    //        foreach (DataSnapshot value in snapshot.Children)
+    //        {
+    //          string[] v = { "" };
+    //          ARObject obj = new ARObject("a", "a", "a", v, 1);
+    //          // Debug.Log(value);
+    //          // obj = (ARObject)value.Value;
+    //          Debug.LogFormat("valor de i {0}", i);
+    //          foreach (DataSnapshot good in value.Children)
+    //          {
+    //            // Debug.LogFormat("Key = {0}, Value = {0}", good.Key, good.Value.ToString());
+    //            // Debug.Log(good.Key);
+    //            // Debug.Log(good.Value);
+
+    //            if (good.Key == "id")
+    //            {
+    //              obj.id = good.Value.ToString();
+    //            }
+    //            else if (good.Key == "name")
+    //            {
+    //              obj.name = good.Value.ToString();
+    //            }
+    //            else if (good.Key == "description")
+    //            {
+    //              obj.description = good.Value.ToString();
+    //            }
+    //            else if (good.Key == "hashtags")
+    //            {
+    //              foreach (DataSnapshot hashTag in good.Children)
+    //              {
+    //                Debug.LogFormat("e ai? {0}", hashTag);
+    //                obj.hashtags[0] = hashTag.Value.ToString();
+    //              }
+    //            }
+    //            else if (good.Key == "scale")
+    //            {
+    //              obj.scale = float.Parse(good.Value.ToString());
+    //            }
+
+    //          }
+
+    //          convertedObjects[i] = obj;
+    //          i++;
+    //        }
+
+    //        Debug.LogFormat("esse estah assim: {0} {1} {2} {3} {4}", convertedObjects[0].id, convertedObjects[0].name, convertedObjects[0].description, convertedObjects[0].hashtags[0], convertedObjects[0].scale);
+    //        Debug.LogFormat("e esse assim: {0} {1} {2} {3} {4}", convertedObjects[1].id, convertedObjects[1].name, convertedObjects[1].description, convertedObjects[1].hashtags[0], convertedObjects[1].scale);
+    //        callback(convertedObjects);
+    //      }
+    //    });
   }
 }
