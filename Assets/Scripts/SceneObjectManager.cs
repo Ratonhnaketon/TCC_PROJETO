@@ -244,8 +244,8 @@ public class SceneObjectManager : MonoBehaviour
 
     public void AddObjectToScene()
     {
-        RemoveObjectFromScene();
-
+        if (objectsInScene.Count > 0)
+            RemoveObjectFromScene();
         // Set selected object to
         Debug.Log(google_poly_api.importedObject);
         SetSelectedObject(google_poly_api.importedObject);
