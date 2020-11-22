@@ -16,6 +16,7 @@ public class DD_PolyAR : MonoBehaviour {
 	[SerializeField] Transform m_cameraTransform; 
 	int resultCount = 20;
 	public GameObject importedObject;
+	public GameObject loadingCircle;
 	public bool polyDescription;
 	public ARObject[] firebaseObjects;
 	public Text Title;
@@ -140,6 +141,7 @@ public class DD_PolyAR : MonoBehaviour {
 		if (!status.ok)
 		{
 			Debug.LogError("Failed to import thumbnail. :( Reason: " + status);
+			loadingCircle.SetActive(false);
 			return;
 		}
 		asset_thumbnail_list.Add(new KeyValuePair<string, Texture2D>(asset.name, asset.thumbnailTexture));
@@ -152,6 +154,7 @@ public class DD_PolyAR : MonoBehaviour {
 				onPolyThumbLoaded.Invoke();
 			}
 		}
+		loadingCircle.SetActive(false);
 
 	}
 
@@ -222,9 +225,11 @@ public class DD_PolyAR : MonoBehaviour {
 		{
 			Debug.LogError("Failed to import asset. :( Reason: " + result.Status);
 			//statusText.text = "ERROR: Import failed: " + result.Status;
+			loadingCircle.SetActive(false);
 			return;
 		}
 		Debug.Log("Successfully imported asset!");
+		loadingCircle.SetActive(false);
 
 		// Show attribution (asset title and author).
 		//statusText.text = asset.displayName + "\nby " + asset.authorName;

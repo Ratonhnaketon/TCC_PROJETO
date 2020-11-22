@@ -17,6 +17,8 @@ public class DD_Asset_Menu_UI_Screen : MonoBehaviour
 
     public GameObject assets_panel_prefab;
 
+    public GameObject loadingCircle;
+
     public List<GameObject> asset_panel_list;
     public List<Button> asset_panel_buttons;
     public List<Image> asset_panel_images;
@@ -165,6 +167,7 @@ public class DD_Asset_Menu_UI_Screen : MonoBehaviour
 
     public void SearchButtonQuery()
     {
+        loadingCircle.SetActive(true);
         Debug.Log("Search Input " + search_input_field.textComponent.text);
         if (searchOnPoly)
         {
@@ -199,6 +202,7 @@ public class DD_Asset_Menu_UI_Screen : MonoBehaviour
     }   
     public void ImportAssetOnClick()
     {
+        loadingCircle.SetActive(true);
         Debug.Log("You have clicked the " + EventSystem.current.currentSelectedGameObject.name + " button!");
         string modelName = EventSystem.current.currentSelectedGameObject.transform.GetChild(0).GetComponent<Text>().text;
         Debug.Log("MODEL NAME: " + modelName);
