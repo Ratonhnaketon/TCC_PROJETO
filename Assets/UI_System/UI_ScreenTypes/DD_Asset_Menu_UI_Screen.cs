@@ -169,13 +169,18 @@ public class DD_Asset_Menu_UI_Screen : MonoBehaviour
     {
         loadingCircle.SetActive(true);
         Debug.Log("Search Input " + search_input_field.textComponent.text);
-        if (searchOnPoly)
-        {
-            poly_api.PolyAssetSearchQuery(search_input_field.text);
-        }
-        else
-        {
-		    firebaseHandler.getElements(HandleFirebaseObjects);
+        if (search_input_field.textComponent.text == "") {
+            Debug.Log("nada digitado");
+            loadingCircle.SetActive(false);
+        } else {
+            if (searchOnPoly)
+            {
+                poly_api.PolyAssetSearchQuery(search_input_field.text);
+            }
+            else
+            {
+                firebaseHandler.getElements(HandleFirebaseObjects);
+            }
         }
     }
 

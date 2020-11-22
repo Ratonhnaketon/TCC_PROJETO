@@ -92,6 +92,7 @@ public class DD_PolyAR : MonoBehaviour {
 		{
 			// Handle error.
 			Debug.LogError("Failed to import featured list. :( Reason: " + result.Status);
+			loadingCircle.SetActive(false);
 			return;
 		}
 		// Success. result.Value is a PolyAssets
@@ -103,6 +104,8 @@ public class DD_PolyAR : MonoBehaviour {
 
 		if(onPolyAssetsLoaded != null)
 			onPolyAssetsLoaded.Invoke();
+			
+		loadingCircle.SetActive(false);
 	}
 	void FeaturedAssetListCallback(PolyStatusOr<PolyListAssetsResult> result)
 	{
