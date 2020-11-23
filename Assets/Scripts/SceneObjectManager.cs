@@ -37,6 +37,7 @@ public class SceneObjectManager : MonoBehaviour
     Transform pivot;
 
     public ARRaycastManager arRaycastManager;
+    public ARPlaneManager arPlaneManager;
 
     #region variables for object controls
     // used in scaling & rotation calculation 
@@ -60,6 +61,7 @@ public class SceneObjectManager : MonoBehaviour
         arTap = FindObjectOfType<ARPlacementIndicator>();
         uiScreen = FindObjectOfType<DD_Asset_Menu_UI_Screen>();
         google_poly_api = FindObjectOfType<DD_PolyAR>();
+        arPlaneManager = FindObjectOfType<ARPlaneManager>();
 
         pivot = new GameObject().transform;
         pivot.name = "pivot";
@@ -247,6 +249,12 @@ public class SceneObjectManager : MonoBehaviour
         if (objectsInScene.Count > 0)
             RemoveObjectFromScene();
         // Set selected object to
+
+        arPlaneManager.enabled = false;
+        foreach (var plane in arPlaneManager.trackables)
+        {
+            plane.gameObject.SetActive(false);
+        }
         Debug.Log(google_poly_api.importedObject);
         SetSelectedObject(google_poly_api.importedObject);
         objectsInScene.Add(google_poly_api.importedObject);
@@ -273,6 +281,12 @@ public class SceneObjectManager : MonoBehaviour
                 if(featured_artist_text != null)
                     featured_artist_text.text = "Escolha um objeto e\ntoque para posicioná-lo";
             }
+        }
+        arPlaneManager.enabled = true;
+
+        foreach (var plane in arPlaneManager.trackables)
+        {
+            plane.gameObject.SetActive(true);
         }
     }
 
