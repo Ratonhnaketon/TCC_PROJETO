@@ -21,11 +21,9 @@ public class FirebaseHandler : MonoBehaviour
 
 	public void getElements(ARObjectsCallback callback, string hashtag = "")
 	{
-		Debug.Log("oi");
 		RestClient.Get($"{databaseURL}leandro.json").Then(response => {
     		JObject json = JsonConvert.DeserializeObject<JObject>(response.Text);
 			List<ARObject> arObjects = new List<ARObject>();
-			Debug.Log("aqui");
 			foreach (var e in json)
 			{
 				string name = (string) e.Value["name"];
@@ -35,9 +33,7 @@ public class FirebaseHandler : MonoBehaviour
 				float scale = (float) e.Value["scale"];
 				arObjects.Add(new ARObject(name, description, id, hashtags, scale));
 			}
-			Debug.Log("la");
 			callback(arObjects.ToArray());
-			Debug.Log("uhu");
 		});
 	}
 }

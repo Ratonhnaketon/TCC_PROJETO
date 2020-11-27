@@ -189,7 +189,7 @@ public class DD_Asset_Menu_UI_Screen : MonoBehaviour
         int size = 0;
         foreach (ARObject arObject in arObjects)
         {
-            if (string.Join(",", arObject.hashtags).Contains(search_input_field.text))
+            if (arObject.hashtags[0] == search_input_field.text)
             {
                 size += 1;
             }
@@ -198,7 +198,7 @@ public class DD_Asset_Menu_UI_Screen : MonoBehaviour
 
         foreach (ARObject arObject in arObjects)
         {
-            if (string.Join(",", arObject.hashtags).Contains(search_input_field.text))
+            if (arObject.hashtags[0] == search_input_field.text)
             {
                 Debug.Log(arObject.id);
                 poly_api.GetSingleThumbnailWithID(arObject.id);
